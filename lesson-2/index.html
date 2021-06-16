@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Урок 2</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container py-4">
+    <h1>Урок 2</h1>
+    <h4 class="mt-4">Объекты, прототипы, работа с объектами. Сложность алгоритмов</h4>
+    <h4 class="mt-4">Задачи:</h4>
+    <ul>
+        <li>Создать репозиторий на GitHub <br>
+            (<a href="https://github.com/SimpleLines/js-intensive-5)" target="_blank">https://github.com/SimpleLines/js-intensive-5</a>)
+        </li>
+        <li>Создать функции для глубокого сравнения (deepEqual) и глубокого копрования (deepCopy) объектов.
+            Варианты решения на рекурсии и стек</li>
+    </ul>
+
+    <p class="mе-4 text-muted">Ответ: Варианты решения пока сделал только на рекурсии. Тесты вывожу в консоль.</p>
+</div>
+
+<script>
+
+    const shallowCopy = (...objects) => {
+        let  result = {};
+        objects.forEach((obj) => {
+            result = {...result, ...obj};
+        })
+        return result;
+    }
+
+    const shallowCopy2 = (object) => {
+        return Object.assign({}, object);
+    }
+
+    const deepCopyWithoutMethods = (object) => {
+        return JSON.parse(JSON.stringify(object));
+    }
+
+
+    const isArray = function (obj) {
+        if (obj.constructor) {
+            if (obj.constructor.name.toLowerCase() === 'array') return true
+        } else {
+            if (Array.isArray(obj)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    const isObject = function (obj) {
+        return obj !== null && (typeof obj).toLowerCase() === 'object';
+    }
+
+    const isPrimitive = function (value) {
+        return Object(value) !== value;
+    };
+
+
+    const deepCopy = function (obj) {
+
+        function copy (obj) {
+            if (isArray(obj)) {
+                return obj.map(function (item) {
+                    return copy(item);
+                });
+            }
+
+            if (!isArray(obj) && isObject(obj)) {
+                const newObj = {};
+                for (let key in obj) {
+                    if (obj.hasOwnProperty(key)) {
+                        newObj[key] = copy(obj[key])
+                    }
+                }
+                return newObj;
+            }
+
+            return obj;
+        }
+
+        let newObject =  copy(obj);
+        newObject.__proto__ = obj.__proto__;
+        return newObject;
+    }
+
+    const deepEqual = function () {
+        let isEqual = true;
+
+        const decline = function () {
+            isEqual = false;
+            return false;
+        }
+
+        return function compare(baseObj, comparedObj) {
+            if (! isEqual) return false;
+
+
+            if (isArray(baseObj)) {
+
+                if (! isArray(comparedObj) ) {
+                    return decline();
+                }
+
+                const arrLength = baseObj.length;
+
+                if (arrLength !== comparedObj.length ) {
+                    return decline();
+                }
+
+                /*Пока без учета, что может быть вложенный объект в массиве*/
+
+                for (let i = 0; i < arrLength; i++) {
+
+                    if ( ! isPrimitive(baseObj[i]) ) {
+                        if ( ! (compare(baseObj[i], comparedObj[i] )) ) {
+                            return decline();
+                        }
+
+                        continue;
+                    }
+
+                    if (baseObj[i] !==  comparedObj[i]) {
+                        return decline();
+                    }
+                }
+            }
+
+            if ( !isArray(baseObj) && isObject(baseObj) ) {
+
+                if (! (!isArray(comparedObj)  && isObject(comparedObj)) ) {
+                    return decline();
+                }
+
+                /*Пока без учета, что может быть вложен объект в объекте*/
+
+                for (let key in baseObj) {
+                    if (baseObj.hasOwnProperty(key)) {
+                        if ( ! isPrimitive(baseObj[key]) ) {
+                            if ( ! ( compare(baseObj[key], comparedObj[key]) ) ) {
+                                return decline();
+                            }
+                           continue;
+                        }
+
+                        if (baseObj[key] !== comparedObj[key]) {
+                            return decline();
+                        }
+                    }
+                }
+            }
+
+            if (
+                ! isArray(baseObj) &&
+                ! isObject(baseObj) &&
+                baseObj !== comparedObj
+            ) {
+                return decline();
+            }
+
+            return  true;
+        }
+    };
+
+
+
+    /*TESTS*/
+
+
+    const foo = () => {}
+    const foo2 = () => {}
+
+    let a = {
+        name: 'a',
+        status: '5',
+        arr: [1, 2, [3,4]],
+        obj: {
+            skills: ['a', 'b', 'c'],
+            settings: {
+                style: 'black theme',
+            },
+            foo: foo
+        }
+    };
+
+    let b = {
+        name: 'a',
+        status: '5',
+        arr: [1, 2, [3,4]],
+        obj: {
+            skills: ['a', 'b', 'c'],
+            settings: {
+                style: 'black theme'
+            },
+            foo: foo
+        }
+    };
+
+    let c = {
+        name: 'a',
+        status: '5',
+        arr: [1, 2, [3,4]],
+        obj: {
+            skills: ['a', 'b', 'c'],
+            settings: {
+                style: 'white theme'
+            },
+            foo: foo2
+        }
+    };
+
+
+
+    const user1 = {
+        name: 'John',
+        age:25,
+        stack: ['js', 'php', 'laravel', 'yii2'],
+        speciality: 'php developer',
+        rank: 'middle',
+        info: {
+            status: 'online',
+            isAdmin: true,
+            access: {
+                read: true,
+                write: true,
+            }
+        },
+        skills: [
+            {
+                frontend: ['js', 'jquery', 'react'],
+                backend: ['php', 'python', 'yii2', 'laravel', 'django'],
+                other: ['git', 'docker', 'sql']
+            },
+            {
+                education: ['high order school', 'it college'],
+                competitions: ['world skills']
+            }
+        ],
+        fire: function () {
+            return {
+                fire: true
+            }
+        }
+    }
+
+    const user2 = {
+        name: 'Alex',
+        age: 18,
+        stack: ['jquery', 'html', 'css'],
+        speciality: 'html/css developer',
+        rank: 'trainee'
+    }
+
+    const cloneUser1 = deepCopy(user1);
+
+    console.log('compare prototypes  cloneUser1 and user1: ', cloneUser1.__proto__ === user1.__proto__ );
+    console.log( 'compare cloneUser1 user1: ', deepEqual()(cloneUser1, user1) );
+    console.log( 'compare a b: ', deepEqual()(a, b) );
+    console.log( 'compare a c: ', deepEqual()(a, c) );
+
+
+
+
+
+
+
+
+
+</script>
+
+
+</body>
+</html>
