@@ -111,8 +111,6 @@
                     return decline();
                 }
 
-                /*Пока без учета, что может быть вложенный объект в массиве*/
-
                 for (let i = 0; i < arrLength; i++) {
 
                     if ( ! isPrimitive(baseObj[i]) ) {
@@ -135,7 +133,6 @@
                     return decline();
                 }
 
-                /*Пока без учета, что может быть вложен объект в объекте*/
 
                 for (let key in baseObj) {
                     if (baseObj.hasOwnProperty(key)) {
