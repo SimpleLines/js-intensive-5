@@ -1,0 +1,21 @@
+.stopwatch-value {
+    font-size: 36px;
+    line-height: 1;
+    font-weight: 700;
+    font-family: monospace;
+}
+.stopwatch-block {
+    margin-top: 80px;
+}
+.stopwatch:nth-child(n+2) {
+    margin-top: 40px;
+}
+.stopwatch-controls .btn {min-width: 70px;}
+.laps-container .btn {
+    width: 90px;
+    display: block;
+}
+.stopwatch .table th:last-child,
+.stopwatch .table td:last-child {
+    width: calc(90px + 1rem);
+}

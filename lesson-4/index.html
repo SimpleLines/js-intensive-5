@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Урок 4</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="stopwatch.css" rel="stylesheet">
+</head>
+<body>
+<div class="container py-4">
+    <h1>Урок 4</h1>
+    <h4 class="mt-4">Асинхронность JS. Promise. Fetch. Event Loop.</h4>
+    <h4 class="mt-4">Задачи:</h4>
+    <ul>
+        <li>Написать секундомер. Секундомер должен иметь следующий функционал: <br>
+            - Отображать текущее время сточностью до сотых секунды. <br>
+            - Отображать время круга. <br>
+            - Поставить секундомер на паузу  и продолжить с текущего времени. <br>
+            - Остановить секундомер и обнулить данные.
+        </li>
+    </ul>
+
+    <div class="stopwatch-block">
+        <h3 class="mt-4">Приложение секундомер</h3>
+
+        <div id="stopwatch-wrap" class="mt-4"></div>
+    </div>
+</div>
+
+<script src="stopwatch.js"></script>
+<script>
+    const stopWatch = fn.stopwatch('#stopwatch-wrap');
+    stopWatch.init();
+</script>
+</body>
+</html>
